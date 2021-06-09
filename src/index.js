@@ -30,7 +30,7 @@ class Board extends React.Component {
 		for (let i = 0; i < 3; i++) {
 			square[i] = this.renderSquare(j*3+i);
 		}
-		squares[j] = <div>{square.slice()}</div>
+		squares[j] = <div key={j}>{square.slice()}</div>
 	}
     return (
       <div>
@@ -49,7 +49,12 @@ class Game extends React.Component {
 			step: null
 		  }],
 		  stepNumber: 0,
-		  xIsNext: true
+		  xIsNext: true,
+		  sortDec: false,
+		  highLightLast: {
+			always: false,
+			highLight: false			
+		  }
 	  };
   }
   handleClick(i) {
@@ -68,17 +73,30 @@ class Game extends React.Component {
 	  stepNumber: history.length,
       xIsNext: !this.state.xIsNext
     });
+	this.setState({
+		highLightLast: {
+			always: this.state.highLightLast.always,
+			highLight: false			
+		}
+	});
   }
   jumpTo(step){
-	  this.setState({
+	this.setState({
 		  stepNumber: step,
 		  xIsNext: (step%2) === 0
     });
+	this.setState({
+		highLightLast: {
+			always: this.state.highLightLast.always,
+			highLight: true			
+		}
+	});
   }
   render() {
 	const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
+    const noWinner = calculateNoWinner(current.squares);
 	const moves = history.map((step, move) => {
       const col = step.position%3+1;		
       const row = Math.floor(step.position/3+1);		
@@ -87,14 +105,16 @@ class Game extends React.Component {
         'К началу игры';
       return (
         <li key={move}>
-          <button onClick={() => this.jumpTo(move)} className={move === this.state.stepNumber ? 'btn active' : 'btn'}>{desc}</button>
+          <button onClick={() => this.jumpTo(move)} className={(this.state.highLightLast.always || this.state.highLightLast.highLight) && (move === this.state.stepNumber) ? 'btn active' : 'btn'}>{desc}</button>
         </li>
       );
     });
     let status;
     if (winner) {
       status = 'Выиграл ' + winner;
-    } else {
+    } else if(noWinner) {
+	  status = 'Ничья';
+	} else {
       status = 'Следующий ход: ' + (this.state.xIsNext ? 'X' : 'O');
     }
     return (
@@ -106,8 +126,25 @@ class Game extends React.Component {
 		  />
         </div>
         <div className="game-info">
+		  <button onClick={() => this.setState({highLightLast: {always: !this.state.highLightLast.always}})} className='containerLight'>
+			<div className='titleLight'>Включить подсветку последнего хода</div>
+			<div className={this.state.highLightLast.always ? 'toggleLight on' : 'toggleLight'}>
+				<div className={this.state.highLightLast.always ? 'toggleLightCircle on' : 'toggleLightCircle'}>
+				</div>
+			</div>
+		  </button>
           <div>{status }</div>
-          <ol>{moves}</ol>
+		  <button onClick={() => this.setState({sortDec: !this.state.sortDec})} className='containerSort'>
+			<div className='titleSort'>Сортировка</div>
+			<div className={this.state.sortDec ? 'arrowSortLeft sort' : 'arrowSortLeft'}>
+				<hr color='black' size='1'/>
+			</div>
+			<div className={this.state.sortDec ? 'arrowSortRight sort' : 'arrowSortRight'}>
+				<hr color='black' size='1'/>
+			</div>
+		  </button>
+		  
+          <ol>{this.state.sortDec ? moves.slice().reverse() : moves}</ol>
         </div>
       </div>
     );
@@ -142,4 +179,8 @@ function calculateWinner (squares) {
 		}
 	}
 	return null;
+};
+
+function calculateNoWinner (squares) {
+	return squares.indexOf(null) === -1;
 };
