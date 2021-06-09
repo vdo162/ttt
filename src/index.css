@@ -36,6 +36,10 @@ ol, ul {
   outline: none;
 }
 
+.square.winSquares {
+  background: #00BFFF;
+}
+
 .kbd-navigation .square:focus {
   background: #ddd;
 }
@@ -47,4 +51,87 @@ ol, ul {
 
 .game-info {
   margin-left: 20px;
+}
+
+.btn {
+	margin: 1px;
+}
+
+.btn.active {
+	border-color: #00BFFF;
+	border-radius: 3px;
+}
+
+.containerSort {
+	background: none;
+	border: none;
+	display: flex;
+	margin-left: 11px;
+	margin-bottom: -11px;
+}
+
+.titleSort {
+	margin-right: 8px;
+}
+
+.arrowSortLeft {
+	margin-right: -5px;
+	height: 15px;
+	width: 13px;
+	transform: rotate(45deg);
+	transition: 500ms;
+}
+.arrowSortLeft.sort {
+	transform: rotate(-45deg);
+}
+
+.arrowSortRight {
+	height: 15px;
+	width: 13px;
+	transform: rotate(-45deg);
+	transition: 500ms;
+}
+.arrowSortRight.sort {
+	transform: rotate(45deg);
+}
+
+.containerLight {
+	background: none;
+	border: none;
+	display: flex;
+	align-items: center;
+	margin-left: -5px;
+	margin-bottom: 20px;
+}
+
+.titleLight {
+	margin-right: 8px;
+}
+
+.toggleLight {
+	background: #DCDCDC;
+	width: 30px;
+	height: 14px;
+	border-radius: 7px;
+	display: flex;
+	justify-content: flex-start;
+	transition: 500ms;
+}
+.toggleLight.on {
+	background: #00BFFF;
+	justify-content: flex-end;
+}
+
+.toggleLightCircle {
+	background: #C0C0C0;
+	width: 10px;
+	height: 10px;
+	border : solid #808080 2px;
+	border-radius: 7px;
+	transition: 500ms;
+}
+
+.toggleLightCircle.on {
+	background: #1E90FF;
+	border : solid blue 2px;
 }
